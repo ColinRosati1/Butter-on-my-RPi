@@ -1,4 +1,5 @@
-#!/bin/sh	
+
+#!/bin/sh 
 
 # RASPBERRY PI INSTALLER SCRIPT with raspbian or raspbian-lite
 # SIMPLE SETUP AND START DEVELOPING!
@@ -14,7 +15,6 @@
 # have IPADDRESS, GATEWAY, and NETMASK all
 # defined on "sudo's" command line, like this:
 # sudo IPADDRESS="192.168.1.x" GATEWAY="192.168.1.x" NETMASK="255.255.255.0" /RPI_steup.sh
-# sudo IPADDRESS="192.168.1.x"
 
 
 
@@ -29,6 +29,12 @@ ifdown eth0
 
 echo Type IP
 read IPADDRESS
+echo gateway - hint 192.168.32.1
+read GATEWAY
+echo netmask - hint 255.255.255.0
+read NETMASK
+echo network - hint 192.168.32.0
+read NETWORK
 
 # modify the /etc/network/interfaces file
 cat >/etc/network/interfaces <<-__END__
@@ -39,9 +45,12 @@ iface lo inet loopback
 auto eth0
 iface eth0 inet static
     address $IPADDRESS
-    gateway 192.168.32.1
-    netmask 255.255.240.0
-    network 192.168.32.0
+    #gateway 192.168.32.1
+    gateway $GATEWAY
+    # netmask 255.255.240.0
+    netmask $NETMASK
+    #network 192.168.32.0
+  network $NETWORK
     broadcast 192.168.47.255
 
 allow-hotplug wlan0
@@ -53,7 +62,11 @@ __END__
 ifup eth0
 
 
-sudo apt-get update && sudo apt-get upgrade -y
+#ssh enable
+sudo /etc/init.d/ssh start
+
+
+sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install
 
 
 #node.js
@@ -63,60 +76,8 @@ sudo apt install -y nodejs
 
 node -v
 
-#vnc server
-sudo apt-get install netatalk
-sudo apt-get install avahi-daemon
-sudo update-rc.d avahi-daemon defaults
+sudo apt-get install python3-pip
+    
 
-sudo cat >/etc/avahi/services/afpd.service <<-__END__
-<?xml version="1.0" standalone='no'?><!--*-nxml-*-->
-<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
-<service-group>
-   <name replace-wildcards="yes">%h</name>
-   <service>
-      <type>_afpovertcp._tcp</type>
-      <port>548</port>
-   </service>
-</service-group>
-__END__
-
-sudo /etc/init.d/avahi-daemon restart
-
-sudo apt-get install tightvncserver
-vncserver
-
-
-##################################################### This might not work ############################
-cd /etc/init.d && sudo cat >tightvncserver <<-__END__
-#!/bin/bash
-# /etc/init.d/tightvncserver
-#
-
-# Carry out specific functions when asked to by the system
-case "$1" in
-start)
-    su pi -c '/usr/bin/vncserver -geometry 1440x900'
-    echo "Starting VNC server "
-    ;;
-stop)
-    pkill vncserver
-    echo "VNC Server has been stopped (didn't double check though)"
-    ;;
-*)
-    echo "Usage: /etc/init.d/blah {start|stop}"
-    exit 1
-    ;;	
-esac
-
-exit 0
-__END__
-
-sudo chmod +x tightvncserver
-sudo pkill Xtightvnc
-
-ps aux | grep vnc
-
-sudo /etc/init.d/tightvncserver start
-cd /etc/init.d
-sudo update-rc.d tightvncserver defaults
-
+echo "Now your PI is all buttered up, rebooting."
+sudo reboot
