@@ -6,10 +6,9 @@
 # ENABLE SSH, Configure IP
 # Get Node.js, python
 # share RPi as a remote devices to develop remotely on your favourite text ediotr with access to its file folder directory
-# enable LCD screen * optional
 
-# 1. make an executable shell script - run sudo chmod +x RPI_setup.sh
-# 2. sh RPI_setup.sh
+# 1. make an executable shell script - run sudo chmod +x butter.sh
+# 2. sudo sh butter.sh
 
 # This script must be run by "sudo" and must
 # have IPADDRESS, GATEWAY, and NETMASK all

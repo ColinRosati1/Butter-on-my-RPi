@@ -22,6 +22,9 @@ Begin by downloading this code
 Change Directory
 `cd Butter-on-my-RPi`
 
+make script executable
+`sudo chmod +x butter.sh`
+
 run script as admin to being downloading
 `sudo butter.sh`
 
