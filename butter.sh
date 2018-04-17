@@ -62,6 +62,8 @@ ifup eth0
 
 
 #ssh enable
+sudo raspi-config nonint get_ssh
+sudo raspi-config nonint do_ssh 1
 sudo /etc/init.d/ssh start
 
 
